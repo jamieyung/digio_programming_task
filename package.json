@@ -1,0 +1,11 @@
+{
+  "name": "digio_programming_task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "author": "Jamie Yung",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "8.2.1"
+  }
+}
