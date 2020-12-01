@@ -79,17 +79,17 @@ class LogReporter extends EventEmitter {
     this.#lines_processed++
     const match = LOGLINE.exec(line)
     if (!match) {
-      this.#errors.push({ type: 0, line: line, line_idx: line_idx })
+      this.#errors.push({ line: line, line_idx: line_idx })
       return
     }
 
-    if (!match.groups) {
-      this.#errors.push({ type: 1, line: line, line_idx: line_idx })
+    if (!match.groups || !match.groups.URL || !match.groups.IP) {
+      this.#errors.push({ line: line, line_idx: line_idx })
       return
     }
 
-    if (match.groups.URL) this.#inc(this.#url_hits, match.groups.URL)
-    if (match.groups.IP) this.#inc(this.#ip_address_requests, match.groups.IP)
+    this.#inc(this.#url_hits, match.groups.URL)
+    this.#inc(this.#ip_address_requests, match.groups.IP)
 
     this.emit("progress")
   }

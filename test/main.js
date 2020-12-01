@@ -25,6 +25,29 @@ describe("LogReporter", () => {
     })
   })
 
+  it("Should record an error for badly formatted lines", () => {
+    const line = "I am a badly formatted line"
+    const stream = LR.mkStreamFromArray([line])
+    const reporter = new LR.LogReporter(stream)
+    reporter.on("end", () => {
+      assert.equal(reporter.errors.length, 1)
+      assert.equal(reporter.lines_processed, 1)
+
+      assert.equal(reporter.errors[0].line, line)
+      assert.equal(reporter.errors[0].line_idx, 0)
+    })
+  })
+
+  it("Should not emit a progress event for badly formatted lines", () => {
+    const line = "I am a badly formatted line"
+    const stream = LR.mkStreamFromArray([line])
+    const reporter = new LR.LogReporter(stream)
+
+    let progress_count = 0
+    reporter.on("progress", () => progress_count++)
+    reporter.on("end", () => assert.equal(progress_count, 0))
+  })
+
   it("Should report the correct stats", () => {
     const stream = LR.mkStreamFromFile("programming-task-example-data.log")
     const reporter = new LR.LogReporter(stream)
